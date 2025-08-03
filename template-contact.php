@@ -26,7 +26,108 @@ get_header();
                 <!-- Contact Form -->
                 <div class="bg-white p-8 rounded-lg shadow-lg">
                     <h2 class="text-3xl font-bold text-slate-800 mb-6">Send Us a Message</h2>
-                    <?php echo do_shortcode('[contact-form-7 id="1b29117" title="Contact Us"]'); ?>
+                    
+                    <?php
+                    // Handle form submission
+                    $form_success = false;
+                    $form_error = '';
+                    
+                    if ($_POST && isset($_POST['contact_form_submit'])) {
+                        $first_name = sanitize_text_field($_POST['contact-first-name']);
+                        $last_name = sanitize_text_field($_POST['contact-last-name']);
+                        $email = sanitize_email($_POST['contact-email']);
+                        $phone = sanitize_text_field($_POST['contact-phone']);
+                        $company = sanitize_text_field($_POST['contact-company']);
+                        $service = sanitize_text_field($_POST['contact-service']);
+                        $message = sanitize_textarea_field($_POST['contact-message']);
+                        
+                        if ($first_name && $last_name && $email && $phone && $service && $message) {
+                            $to = get_option('admin_email');
+                            $subject = 'New Contact Form Submission - ' . get_bloginfo('name');
+                            $email_message = "New contact form submission:\n\n";
+                            $email_message .= "Name: $first_name $last_name\n";
+                            $email_message .= "Email: $email\n";
+                            $email_message .= "Phone: $phone\n";
+                            $email_message .= "Company: $company\n";
+                            $email_message .= "Service: $service\n";
+                            $email_message .= "Message: $message\n";
+                            
+                            $headers = array('Content-Type: text/html; charset=UTF-8', 'From: ' . $email);
+                            
+                            if (wp_mail($to, $subject, $email_message, $headers)) {
+                                $form_success = true;
+                            } else {
+                                $form_error = 'Sorry, there was an error sending your message. Please try again.';
+                            }
+                        } else {
+                            $form_error = 'Please fill in all required fields.';
+                        }
+                    }
+                    ?>
+                    
+                    <?php if ($form_success): ?>
+                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+                            <strong>Success!</strong> Your message has been sent. We'll get back to you soon.
+                        </div>
+                    <?php endif; ?>
+                    
+                    <?php if ($form_error): ?>
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                            <strong>Error:</strong> <?php echo $form_error; ?>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <form action="<?php echo esc_url($_SERVER['REQUEST_URI']); ?>" method="POST" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="contact-first-name" class="block text-sm font-medium text-gray-700 mb-2">First Name <span class="text-red-500">*</span></label>
+                                <input type="text" name="contact-first-name" id="contact-first-name" required class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-stone-400 focus:border-stone-400" value="<?php echo isset($_POST['contact-first-name']) ? esc_attr($_POST['contact-first-name']) : ''; ?>">
+                            </div>
+                            <div>
+                                <label for="contact-last-name" class="block text-sm font-medium text-gray-700 mb-2">Last Name <span class="text-red-500">*</span></label>
+                                <input type="text" name="contact-last-name" id="contact-last-name" required class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-stone-400 focus:border-stone-400" value="<?php echo isset($_POST['contact-last-name']) ? esc_attr($_POST['contact-last-name']) : ''; ?>">
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="contact-email" class="block text-sm font-medium text-gray-700 mb-2">Email <span class="text-red-500">*</span></label>
+                                <input type="email" name="contact-email" id="contact-email" required class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-stone-400 focus:border-stone-400" value="<?php echo isset($_POST['contact-email']) ? esc_attr($_POST['contact-email']) : ''; ?>">
+                            </div>
+                            <div>
+                                <label for="contact-phone" class="block text-sm font-medium text-gray-700 mb-2">Phone <span class="text-red-500">*</span></label>
+                                <input type="tel" name="contact-phone" id="contact-phone" required class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-stone-400 focus:border-stone-400" value="<?php echo isset($_POST['contact-phone']) ? esc_attr($_POST['contact-phone']) : ''; ?>">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="contact-company" class="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                            <input type="text" name="contact-company" id="contact-company" class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-stone-400 focus:border-stone-400" value="<?php echo isset($_POST['contact-company']) ? esc_attr($_POST['contact-company']) : ''; ?>">
+                        </div>
+                        
+                        <div>
+                            <label for="contact-service" class="block text-sm font-medium text-gray-700 mb-2">Service Required <span class="text-red-500">*</span></label>
+                            <select id="contact-service" name="contact-service" required class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-stone-400 focus:border-stone-400">
+                                <option value="">Please select a service</option>
+                                <option value="static-guard" <?php echo (isset($_POST['contact-service']) && $_POST['contact-service'] == 'static-guard') ? 'selected' : ''; ?>>Static Guard</option>
+                                <option value="mobile-patrol" <?php echo (isset($_POST['contact-service']) && $_POST['contact-service'] == 'mobile-patrol') ? 'selected' : ''; ?>>Mobile Patrol</option>
+                                <option value="crowd-control" <?php echo (isset($_POST['contact-service']) && $_POST['contact-service'] == 'crowd-control') ? 'selected' : ''; ?>>Crowd Control</option>
+                                <option value="traffic-control" <?php echo (isset($_POST['contact-service']) && $_POST['contact-service'] == 'traffic-control') ? 'selected' : ''; ?>>Traffic Control</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="contact-message" class="block text-sm font-medium text-gray-700 mb-2">Message <span class="text-red-500">*</span></label>
+                            <textarea name="contact-message" id="contact-message" rows="5" required class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-stone-400 focus:border-stone-400" placeholder="Please describe your security requirements..."><?php echo isset($_POST['contact-message']) ? esc_textarea($_POST['contact-message']) : ''; ?></textarea>
+                        </div>
+                        
+                        <div>
+                            <input type="hidden" name="contact_form_submit" value="1">
+                            <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                                <i class="fas fa-paper-plane mr-2"></i>Send Message
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
                 <!-- Contact Information -->
@@ -52,8 +153,8 @@ get_header();
                                 </div>
                                 <div>
                                     <h4 class="font-bold text-gray-900 mb-1">Email</h4>
-                                    <p class="text-gray-600">info@vgpsecurity.com</p>
-                                    <p class="text-sm text-gray-500">We respond within 2 hours</p>
+                                    <p class="text-gray-600">info@theonepointsecurity.com</p>
+                                    <p class="text-sm text-gray-500">We respond as soon as possible</p>
                                 </div>
                             </div>
                             
@@ -79,21 +180,6 @@ get_header();
                         </div>
                     </div>
 
-                    <!-- Emergency Contact -->
-                    <div class="bg-red-50 border border-red-200 p-6 rounded-lg">
-                        <div class="flex items-center mb-4">
-                            <i class="fas fa-exclamation-triangle text-red-600 text-2xl mr-3"></i>
-                            <h3 class="text-xl font-bold text-red-800">Emergency Contact</h3>
-                        </div>
-                        <p class="text-red-700 mb-3">For immediate security emergencies or urgent assistance:</p>
-                        <div class="space-y-2">
-                            <p class="text-red-800 font-bold text-lg">
-                                <i class="fas fa-phone mr-2"></i>
-                                Emergency: (123) 456-7999
-                            </p>
-                            <p class="text-red-600 text-sm">Available 24/7 for existing clients</p>
-                        </div>
-                    </div>
 
                     <!-- Service Areas -->
                     <div class="bg-white p-8 rounded-lg shadow-lg">
@@ -176,13 +262,13 @@ get_header();
                         <text x="305" y="15" fill="#6b7280" font-size="12" font-weight="bold" transform="rotate(90 305 15)">Main Avenue</text>
                         
                         <!-- Office label -->
-                        <text x="250" y="180" text-anchor="middle" fill="#1c222c" font-size="14" font-weight="bold">VGP Security</text>
+                        <text x="250" y="180" text-anchor="middle" fill="#1c222c" font-size="14" font-weight="bold">The One Point Security</text>
                         <text x="250" y="195" text-anchor="middle" fill="#1c222c" font-size="12">Head Office</text>
                     </svg>
                     
                     <!-- Map overlay info -->
                     <div class="absolute bottom-4 left-4 bg-white p-4 rounded-lg shadow-lg">
-                        <h4 class="font-bold text-slate-800 mb-2">VGP Security</h4>
+                        <h4 class="font-bold text-slate-800 mb-2">The One Point Security</h4>
                         <p class="text-gray-600 text-sm">123 Security Lane, Suite 100<br>Metropolis, ST 12345</p>
                         <a href="#" class="text-slate-600 hover:text-slate-800 text-sm underline mt-2 inline-block">
                             Get Directions

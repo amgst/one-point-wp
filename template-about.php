@@ -10,7 +10,7 @@ get_header();
         <div class="max-w-7xl mx-auto px-4 py-20">
             <div class="text-center">
                 <h1 class="text-4xl md:text-6xl font-bold mb-6">
-                    About <span class="text-stone-400">VGP Security</span>
+                    About <span class="text-stone-400">The One Point Security</span>
                 </h1>
                 <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
                     Your trusted security partner with years of experience protecting what matters most.
@@ -26,7 +26,7 @@ get_header();
                 <div>
                     <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-6">Our Story</h2>
                     <p class="text-gray-600 text-lg mb-6">
-                        Founded in 2019, VGP Security emerged from a vision to provide uncompromising security services across Australia. Our founders, with decades of combined experience in law enforcement and private security, recognized the need for a security company that truly understands the unique challenges facing Australian businesses and communities.
+                        Founded in 2019, The One Point Security emerged from a vision to provide uncompromising security services across Australia. Our founders, with decades of combined experience in law enforcement and private security, recognized the need for a security company that truly understands the unique challenges facing Australian businesses and communities.
                     </p>
                     <p class="text-gray-600 text-lg mb-6">
                         From our humble beginnings as a small team of dedicated professionals, we have grown into one of Australia's most trusted security providers, serving hundreds of satisfied clients across residential, commercial, and industrial sectors.

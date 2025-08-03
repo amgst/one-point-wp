@@ -26,28 +26,70 @@ get_header();
                 <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4 text-center">Featured Article</h2>
             </div>
             
-            <div class="bg-gray-50 rounded-lg overflow-hidden shadow-lg hover-lift">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="p-8">
-                        <div class="flex items-center mb-4">
-                            <span class="bg-slate-800 text-white px-3 py-1 rounded-full text-sm font-bold mr-3">Featured</span>
-                            <span class="text-gray-500 text-sm">December 15, 2024</span>
+            <?php
+            // Get the most recent post as featured
+            $featured_post = get_posts(array(
+                'numberposts' => 1,
+                'post_status' => 'publish'
+            ));
+            
+            if ($featured_post) :
+                $post = $featured_post[0];
+                setup_postdata($post);
+            ?>
+                <div class="bg-gray-50 rounded-lg overflow-hidden shadow-lg hover-lift">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="p-8">
+                            <div class="flex items-center mb-4">
+                                <span class="bg-slate-800 text-white px-3 py-1 rounded-full text-sm font-bold mr-3">Featured</span>
+                                <span class="text-gray-500 text-sm"><?php echo get_the_date('F j, Y'); ?></span>
+                            </div>
+                            <h3 class="text-2xl md:text-3xl font-bold text-slate-800 mb-4">
+                                <a href="<?php the_permalink(); ?>" class="hover:text-slate-600 transition duration-300">
+                                    <?php the_title(); ?>
+                                </a>
+                            </h3>
+                            <p class="text-gray-600 mb-6 leading-relaxed">
+                                <?php echo wp_trim_words(get_the_excerpt() ?: get_the_content(), 30); ?>
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-user text-white"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-gray-900"><?php the_author(); ?></p>
+                                        <p class="text-sm text-gray-500">Security Expert</p>
+                                    </div>
+                                </div>
+                                <a href="<?php the_permalink(); ?>" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 px-6 rounded-lg transition duration-300">
+                                    Read More
+                                </a>
+                            </div>
                         </div>
-                        <h3 class="text-2xl md:text-3xl font-bold text-slate-800 mb-4">
-                            The Future of Commercial Security: AI and Smart Surveillance
-                        </h3>
-                        <p class="text-gray-600 mb-6 leading-relaxed">
-                            Discover how artificial intelligence and smart surveillance technologies are revolutionizing commercial security. From predictive analytics to automated threat detection, learn about the cutting-edge solutions that are keeping businesses safer than ever before.
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center mr-3">
-                                    <i class="fas fa-user text-white"></i>
+                        <div class="lg:p-8">
+                            <?php if (has_post_thumbnail()) : ?>
+                                <div class="h-64 lg:h-full rounded-lg overflow-hidden">
+                                    <?php the_post_thumbnail('large', array('class' => 'w-full h-full object-cover')); ?>
                                 </div>
-                                <div>
-                                    <p class="font-bold text-gray-900">Sarah Mitchell</p>
-                                    <p class="text-sm text-gray-500">Security Technology Expert</p>
+                            <?php else : ?>
+                                <div class="h-64 lg:h-full bg-slate-800 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-shield-alt text-white text-6xl"></i>
                                 </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <?php wp_reset_postdata(); ?>
+            <?php else : ?>
+                <div class="bg-gray-50 rounded-lg p-12 text-center">
+                    <i class="fas fa-newspaper text-6xl text-gray-400 mb-6"></i>
+                    <h3 class="text-2xl font-bold text-slate-800 mb-4">No Posts Yet</h3>
+                    <p class="text-gray-600">Check back soon for security insights and industry updates!</p>
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
                             </div>
                             <a href="<?php echo home_url('/blog/ai-surveillance'); ?>" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-2 px-6 rounded-lg transition duration-300">
                                 Read More
@@ -203,121 +245,82 @@ get_header();
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Article 1 -->
-                <article class="bg-white rounded-lg shadow-lg overflow-hidden hover-lift">
-                    <div class="h-48 bg-slate-200 flex items-center justify-center">
-                        <svg width="200" height="150" viewBox="0 0 200 150">
-                            <!-- CCTV Camera illustration -->
-                            <rect x="50" y="60" width="100" height="40" fill="#374151" rx="5"/>
-                            <circle cx="100" cy="80" r="15" fill="#1f2937"/>
-                            <circle cx="100" cy="80" r="10" fill="#978d86"/>
-                            <rect x="80" y="50" width="40" height="10" fill="#6b7280"/>
-                            <g stroke="#978d86" stroke-width="2" opacity="0.7">
-                                <line x1="100" y1="80" x2="160" y2="60"/>
-                                <line x1="100" y1="80" x2="160" y2="100"/>
-                            </g>
-                        </svg>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-3">
-                            <span class="bg-slate-100 text-slate-800 px-2 py-1 rounded text-xs font-bold mr-2">Technology</span>
-                            <span class="text-gray-500 text-sm">Dec 12, 2024</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-800 mb-3">
-                            5 Essential CCTV Features for Small Businesses
-                        </h3>
-                        <p class="text-gray-600 mb-4">
-                            Learn about the must-have CCTV features that provide maximum security value for small business owners on a budget.
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 bg-slate-800 rounded-full flex items-center justify-center mr-2">
-                                    <i class="fas fa-user text-white text-xs"></i>
-                                </div>
-                                <span class="text-sm text-gray-600">Mike Johnson</span>
-                            </div>
-                            <a href="#" class="text-slate-800 hover:text-slate-600 font-bold text-sm">Read More →</a>
-                        </div>
-                    </div>
-                </article>
+                <?php
+                // Get recent posts (excluding the featured post)
+                $recent_posts = get_posts(array(
+                    'numberposts' => 6,
+                    'post_status' => 'publish',
+                    'offset' => 1 // Skip the first post as it's used as featured
+                ));
                 
-                <!-- Article 2 -->
-                <article class="bg-white rounded-lg shadow-lg overflow-hidden hover-lift">
-                    <div class="h-48 bg-slate-200 flex items-center justify-center">
-                        <svg width="200" height="150" viewBox="0 0 200 150">
-                            <!-- Access Control illustration -->
-                            <rect x="70" y="40" width="60" height="80" fill="#8b5cf6" rx="5"/>
-                            <rect x="140" y="60" width="20" height="25" fill="#374151" rx="3"/>
-                            <rect x="143" y="63" width="14" height="19" fill="#1f2937" rx="2"/>
-                            <circle cx="150" cy="55" r="2" fill="#10b981"/>
-                            <circle cx="120" cy="80" r="3" fill="#978d86"/>
-                        </svg>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-3">
-                            <span class="bg-green-100 text-green-900 px-2 py-1 rounded text-xs font-bold mr-2">Access Control</span>
-                            <span class="text-gray-500 text-sm">Dec 10, 2024</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-800 mb-3">
-                            Biometric vs. Card Access: Which is Right for You?
-                        </h3>
-                        <p class="text-gray-600 mb-4">
-                            Compare the pros and cons of biometric and card-based access control systems to make the best choice for your facility.
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 bg-slate-800 rounded-full flex items-center justify-center mr-2">
-                                    <i class="fas fa-user text-white text-xs"></i>
+                if ($recent_posts) :
+                    foreach ($recent_posts as $post) :
+                        setup_postdata($post);
+                ?>
+                    <article class="bg-white rounded-lg shadow-lg overflow-hidden hover-lift">
+                        <div class="h-48 bg-gray-200">
+                            <?php if (has_post_thumbnail()) : ?>
+                                <?php the_post_thumbnail('medium', array('class' => 'w-full h-full object-cover')); ?>
+                            <?php else : ?>
+                                <div class="w-full h-full flex items-center justify-center bg-slate-200">
+                                    <i class="fas fa-shield-alt text-slate-800 text-4xl"></i>
                                 </div>
-                                <span class="text-sm text-gray-600">Lisa Chen</span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center mb-3">
+                                <?php
+                                $categories = get_the_category();
+                                if (!empty($categories)) {
+                                    $cat_colors = array(
+                                        'technology' => 'bg-blue-100 text-blue-900',
+                                        'security-guards' => 'bg-red-100 text-red-900',
+                                        'access-control' => 'bg-green-100 text-green-900',
+                                        'surveillance' => 'bg-purple-100 text-purple-900'
+                                    );
+                                    $cat_slug = $categories[0]->slug;
+                                    $cat_class = isset($cat_colors[$cat_slug]) ? $cat_colors[$cat_slug] : 'bg-slate-100 text-slate-800';
+                                    echo '<span class="' . $cat_class . ' px-2 py-1 rounded text-xs font-bold mr-2">' . esc_html($categories[0]->name) . '</span>';
+                                }
+                                ?>
+                                <span class="text-gray-500 text-sm"><?php echo get_the_date('M j, Y'); ?></span>
                             </div>
-                            <a href="#" class="text-slate-800 hover:text-slate-600 font-bold text-sm">Read More →</a>
-                        </div>
-                    </div>
-                </article>
-                
-                <!-- Article 3 -->
-                <article class="bg-white rounded-lg shadow-lg overflow-hidden hover-lift">
-                    <div class="h-48 bg-slate-200 flex items-center justify-center">
-                        <svg width="200" height="150" viewBox="0 0 200 150">
-                            <!-- Security Guard illustration -->
-                            <g transform="translate(100,40)">
-                                <circle cx="0" cy="0" r="15" fill="#f4a261"/>
-                                <rect x="-12" y="15" width="24" height="40" fill="#1c222c" rx="3"/>
-                                <rect x="-20" y="20" width="8" height="25" fill="#1c222c" rx="4"/>
-                                <rect x="12" y="20" width="8" height="25" fill="#1c222c" rx="4"/>
-                                <circle cx="-5" cy="30" r="3" fill="#978d86"/>
-                            </g>
-                        </svg>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex items-center mb-3">
-                            <span class="bg-red-100 text-red-900 px-2 py-1 rounded text-xs font-bold mr-2">Security Guards</span>
-                            <span class="text-gray-500 text-sm">Dec 8, 2024</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-800 mb-3">
-                            The Value of Professional Security Guards in 2024
-                        </h3>
-                        <p class="text-gray-600 mb-4">
-                            Discover why human security presence remains irreplaceable in an increasingly digital security landscape.
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 bg-slate-800 rounded-full flex items-center justify-center mr-2">
-                                    <i class="fas fa-user text-white text-xs"></i>
+                            <h3 class="text-xl font-bold text-slate-800 mb-3 hover:text-slate-600 transition duration-300">
+                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                            </h3>
+                            <p class="text-gray-600 mb-4">
+                                <?php echo wp_trim_words(get_the_excerpt() ?: get_the_content(), 20); ?>
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 bg-slate-800 rounded-full flex items-center justify-center mr-2">
+                                        <i class="fas fa-user text-white text-xs"></i>
+                                    </div>
+                                    <span class="text-sm text-gray-600"><?php the_author(); ?></span>
                                 </div>
-                                <span class="text-sm text-gray-600">David Wilson</span>
+                                <a href="<?php the_permalink(); ?>" class="text-slate-800 hover:text-slate-600 font-bold text-sm">Read More →</a>
                             </div>
-                            <a href="#" class="text-slate-800 hover:text-slate-600 font-bold text-sm">Read More →</a>
                         </div>
+                    </article>
+                <?php
+                    endforeach;
+                    wp_reset_postdata();
+                else :
+                ?>
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-newspaper text-6xl text-gray-400 mb-6"></i>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4">No Recent Articles</h3>
+                        <p class="text-gray-600">Check back soon for more security insights!</p>
                     </div>
-                </article>
+                <?php endif; ?>
             </div>
             
             <div class="text-center mt-12">
-                <a href="#" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
-                    View All Articles
-                </a>
+                <?php if (get_posts(['numberposts' => 1])) : ?>
+                    <a href="<?php echo home_url('/blog'); ?>" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
+                        View All Articles
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </section>
