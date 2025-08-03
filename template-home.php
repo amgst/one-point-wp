@@ -25,8 +25,8 @@ get_header();
                         <a href="contact.html" class="bg-stone-500 hover:bg-stone-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
                             Get a Quote
                         </a>
-                        <a href="tel:+61212345678" class="border-2 border-white hover:bg-white hover:text-slate-800 text-white font-bold py-3 px-8 rounded-lg transition duration-300 flex items-center justify-center">
-                            <i class="fas fa-phone mr-2"></i> +61 2 1234 5678
+                        <a href="tel:<?php echo esc_attr(str_replace(['(', ')', ' ', '-'], '', get_theme_mod('company_phone', '(123) 456-7890'))); ?>" class="border-2 border-white hover:bg-white hover:text-slate-800 text-white font-bold py-3 px-8 rounded-lg transition duration-300 flex items-center justify-center">
+                            <i class="fas fa-phone mr-2"></i> <?php echo esc_html(get_theme_mod('company_phone', '(123) 456-7890')); ?>
                         </a>
                     </div>
                 </div>
