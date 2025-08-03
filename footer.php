@@ -69,8 +69,8 @@
                     <div class="mt-6 p-4 bg-slate-800 rounded-lg">
                         <h4 class="font-semibold text-stone-100 mb-2">24/7 Emergency</h4>
                         <p class="text-stone-300 text-sm mb-2">Need immediate security assistance?</p>
-                        <a href="tel:+1234567890" class="text-stone-400 hover:text-stone-100 font-semibold">
-                            <i class="fas fa-phone mr-1"></i>(123) 456-7890
+                        <a href="tel:<?php echo esc_attr(str_replace(['(', ')', ' ', '-'], '', get_theme_mod('company_phone', '(123) 456-7890'))); ?>" class="text-stone-400 hover:text-stone-100 font-semibold">
+                            <i class="fas fa-phone mr-1"></i><?php echo esc_html(get_theme_mod('company_phone', '(123) 456-7890')); ?>
                         </a>
                     </div>
                 </div>

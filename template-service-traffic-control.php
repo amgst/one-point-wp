@@ -301,8 +301,8 @@ get_header();
                 <a href="<?php echo home_url('/contact'); ?>" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-4 px-8 rounded-lg transition duration-300">
                     Request Traffic Control
                 </a>
-                <a href="tel:+1234567890" class="border-2 border-slate-800 hover:bg-slate-800 hover:text-white text-slate-800 font-bold py-4 px-8 rounded-lg transition duration-300">
-                    Call: (123) 456-7890
+                <a href="tel:<?php echo esc_attr(str_replace(['(', ')', ' ', '-'], '', get_theme_mod('company_phone', '(123) 456-7890'))); ?>" class="border-2 border-slate-800 hover:bg-slate-800 hover:text-white text-slate-800 font-bold py-4 px-8 rounded-lg transition duration-300">
+                    Call: <?php echo esc_html(get_theme_mod('company_phone', '(123) 456-7890')); ?>
                 </a>
             </div>
         </div>

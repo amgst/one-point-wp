@@ -142,7 +142,7 @@ get_header();
                                 </div>
                                 <div>
                                     <h4 class="font-bold text-gray-900 mb-1">Phone</h4>
-                                    <p class="text-gray-600">(123) 456-7890</p>
+                                    <p class="text-gray-600"><?php echo esc_html(get_theme_mod('company_phone', '(123) 456-7890')); ?></p>
                                     <p class="text-sm text-gray-500">24/7 Emergency Line</p>
                                 </div>
                             </div>
@@ -153,7 +153,7 @@ get_header();
                                 </div>
                                 <div>
                                     <h4 class="font-bold text-gray-900 mb-1">Email</h4>
-                                    <p class="text-gray-600">info@theonepointsecurity.com</p>
+                                    <p class="text-gray-600"><?php echo esc_html(get_theme_mod('company_email', 'info@company.com')); ?></p>
                                     <p class="text-sm text-gray-500">We respond as soon as possible</p>
                                 </div>
                             </div>
@@ -164,7 +164,7 @@ get_header();
                                 </div>
                                 <div>
                                     <h4 class="font-bold text-gray-900 mb-1">Address</h4>
-                                    <p class="text-gray-600">123 Security Lane, Suite 100<br>Metropolis, ST 12345</p>
+                                    <p class="text-gray-600"><?php echo wp_kses_post(get_theme_mod('company_address', '123 Security Lane, Suite 100<br>Metropolis, ST 12345')); ?></p>
                                 </div>
                             </div>
                             
@@ -269,7 +269,7 @@ get_header();
                     <!-- Map overlay info -->
                     <div class="absolute bottom-4 left-4 bg-white p-4 rounded-lg shadow-lg">
                         <h4 class="font-bold text-slate-800 mb-2">The One Point Security</h4>
-                        <p class="text-gray-600 text-sm">123 Security Lane, Suite 100<br>Metropolis, ST 12345</p>
+                        <p class="text-gray-600 text-sm"><?php echo wp_kses_post(get_theme_mod('company_address', '123 Security Lane, Suite 100<br>Metropolis, ST 12345')); ?></p>
                         <a href="#" class="text-slate-600 hover:text-slate-800 text-sm underline mt-2 inline-block">
                             Get Directions
                         </a>

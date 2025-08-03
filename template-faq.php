@@ -211,7 +211,7 @@ get_header();
                             <i class="fas fa-chevron-down text-slate-600 transform transition-transform duration-300"></i>
                         </div>
                         <div class="faq-answer mt-4 text-gray-600 hidden">
-                            <p>Call our 24/7 emergency line at (123) 456-7999. For life-threatening emergencies, call 911 first, then contact us. Our dispatch center is staffed around the clock and can immediately coordinate response efforts.</p>
+                            <p>Call our 24/7 emergency line at <?php echo esc_html(get_theme_mod('company_phone', '(123) 456-7890')); ?>. For life-threatening emergencies, call 911 first, then contact us. Our dispatch center is staffed around the clock and can immediately coordinate response efforts.</p>
                         </div>
                     </div>
                     
@@ -240,8 +240,8 @@ get_header();
                 <a href="<?php echo home_url('/contact'); ?>" class="bg-stone-500 hover:bg-stone-400 text-slate-800 font-bold py-4 px-8 rounded-lg transition duration-300">
                     Contact Us
                 </a>
-                <a href="tel:+1234567890" class="border-2 border-stone-400 hover:bg-stone-400 hover:text-slate-800 text-stone-400 font-bold py-4 px-8 rounded-lg transition duration-300">
-                    Call: (123) 456-7890
+                <a href="tel:<?php echo esc_attr(str_replace(['(', ')', ' ', '-'], '', get_theme_mod('company_phone', '(123) 456-7890'))); ?>" class="border-2 border-stone-400 hover:bg-stone-400 hover:text-slate-800 text-stone-400 font-bold py-4 px-8 rounded-lg transition duration-300">
+                    Call: <?php echo esc_html(get_theme_mod('company_phone', '(123) 456-7890')); ?>
                 </a>
             </div>
         </div>

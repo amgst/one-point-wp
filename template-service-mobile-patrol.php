@@ -203,8 +203,8 @@ get_header();
                 <a href="<?php echo home_url('/contact'); ?>" class="bg-stone-400 hover:bg-stone-300 text-slate-800 font-bold py-4 px-8 rounded-lg transition duration-300">
                     Get Free Assessment
                 </a>
-                <a href="tel:+1234567890" class="border-2 border-white hover:bg-white hover:text-slate-800 text-white font-bold py-4 px-8 rounded-lg transition duration-300">
-                    Call Now: (123) 456-7890
+                <a href="tel:<?php echo esc_attr(str_replace(['(', ')', ' ', '-'], '', get_theme_mod('company_phone', '(123) 456-7890'))); ?>" class="border-2 border-white hover:bg-white hover:text-slate-800 text-white font-bold py-4 px-8 rounded-lg transition duration-300">
+                    Call Now: <?php echo esc_html(get_theme_mod('company_phone', '(123) 456-7890')); ?>
                 </a>
             </div>
         </div>
