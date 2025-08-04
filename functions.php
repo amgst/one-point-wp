@@ -1,8 +1,8 @@
 <?php
 /**
- * Footer Security Theme Functions
+ * Security Theme Functions
  * 
- * Main functions file for the Footer Security WordPress theme
+ * Main functions file for the Security WordPress theme
  * Includes theme setup, custom post types, enqueued scripts/styles, and custom functionality
  */
 
@@ -482,7 +482,7 @@ add_action('admin_head', 'footer_theme_admin_styles');
  * Custom Footer Text
  */
 function footer_theme_admin_footer_text() {
-    echo 'Thank you for using Footer Security Theme | <a href="https://wordpress.org/" target="_blank">WordPress</a>';
+    return 'Thank you for using Security Theme | <a href="https://wordpress.org/" target="_blank">WordPress</a>';
 }
 add_filter('admin_footer_text', 'footer_theme_admin_footer_text');
 ?>

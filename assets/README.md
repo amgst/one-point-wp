@@ -1,4 +1,4 @@
-# Footer Security Theme Assets
+# Security Theme Assets
 
 This folder contains all the theme assets organized in a standard WordPress theme structure.
 

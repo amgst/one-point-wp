@@ -1,8 +1,8 @@
 /**
- * Footer Security Theme Custom JavaScript
+ * Security Theme Custom JavaScript
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Footer Security Theme JS loaded');
+    console.log('Security Theme JS loaded');
     
     // Mobile menu functionality
     const mobileMenuButton = document.querySelector('.mobile-menu-button');
