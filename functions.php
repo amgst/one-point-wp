@@ -1,8 +1,7 @@
 <?php
 /**
  * Security Theme Functions
- * 
- * Main functions file for the Security WordPress theme
+ * * Main functions file for the Security WordPress theme
  * Includes theme setup, custom post types, enqueued scripts/styles, and custom functionality
  */
 
@@ -195,16 +194,7 @@ function footer_theme_footer_logo() {
  */
 function footer_theme_debug_assets() {
     if (current_user_can('administrator') && isset($_GET['debug_assets'])) {
-        echo '<!-- Asset Debug Info:';
-        echo 'Template Directory: ' . get_template_directory();
-        echo 'Template Directory URI: ' . get_template_directory_uri();
-        echo 'Header Logo Path: ' . get_template_directory() . '/assets/images/logo.png';
-        echo 'Header Logo URL: ' . footer_theme_image('logo.png');
-        echo 'Header Logo Exists: ' . (file_exists(get_template_directory() . '/assets/images/logo.png') ? 'Yes' : 'No');
-        echo 'Footer Logo Path: ' . get_template_directory() . '/assets/images/logo-footer.png';
-        echo 'Footer Logo URL: ' . footer_theme_image('logo-footer.png');
-        echo 'Footer Logo Exists: ' . (file_exists(get_template_directory() . '/assets/images/logo-footer.png') ? 'Yes' : 'No');
-        echo '-->';
+        echo '';
     }
 }
 add_action('wp_head', 'footer_theme_debug_assets');
@@ -361,9 +351,8 @@ function footer_theme_handle_contact_form() {
         $to = get_option('admin_email');
         $subject = 'Contact Form Submission from ' . $name;
         $body = "Name: $name\nEmail: $email\nMessage: $message";
-        $headers = array('Content-Type: text/html; charset=UTF-8');
         
-        if (wp_mail($to, $subject, $body, $headers)) {
+        if (footer_send_secure_email($to, $subject, $body, $email, $name)) {
             wp_redirect(add_query_arg('contact', 'success', wp_get_referer()));
         } else {
             wp_redirect(add_query_arg('contact', 'error', wp_get_referer()));
@@ -485,4 +474,27 @@ function footer_theme_admin_footer_text() {
     return 'Thank you for using Security Theme | <a href="https://wordpress.org/" target="_blank">WordPress</a>';
 }
 add_filter('admin_footer_text', 'footer_theme_admin_footer_text');
+
+/**
+ * Secure Email Sending Function
+ */
+function footer_send_secure_email($to, $subject, $message, $from_email = null, $from_name = null) {
+    // Set a default from name and email
+    $blog_name = get_bloginfo('name');
+    $admin_email = get_option('admin_email');
+
+    // Use provided from name/email or fall back to defaults
+    $from_name = $from_name ? $from_name : $blog_name;
+    $from_email = $from_email ? $from_email : $admin_email;
+
+    // Use a valid from header that matches the domain
+    $headers = array(
+        'Content-Type: text/html; charset=UTF-8',
+        'From: ' . $from_name . ' <' . $admin_email . '>',
+        'Reply-To: ' . $from_name . ' <' . $from_email . '>'
+    );
+
+    // Send the email
+    return wp_mail($to, $subject, $message, $headers);
+}
 ?>
