@@ -1,7 +1,8 @@
 <?php
 /**
  * Security Theme Functions
- * * Main functions file for the Security WordPress theme
+ *
+ * Main functions file for the Security WordPress theme
  * Includes theme setup, custom post types, enqueued scripts/styles, and custom functionality
  */
 
@@ -37,17 +38,17 @@ function footer_theme_setup() {
     add_theme_support('wp-block-styles');
     add_theme_support('align-wide');
     add_theme_support('customize-selective-refresh-widgets');
-    
+
     // Add excerpt support to pages
     add_post_type_support('page', 'excerpt');
-    
+
     // Register navigation menus
     register_nav_menus(array(
         'primary' => __('Primary Menu', 'footer-theme'),
         'footer' => __('Footer Menu', 'footer-theme'),
         'services' => __('Services Menu', 'footer-theme')
     ));
-    
+
     // Set content width
     global $content_width;
     if (!isset($content_width)) {
@@ -62,19 +63,19 @@ add_action('after_setup_theme', 'footer_theme_setup');
 function footer_theme_scripts() {
     // Enqueue main stylesheet
     wp_enqueue_style('footer-style', get_stylesheet_uri(), array(), '1.0.0');
-    
+
     // Enqueue Tailwind CSS
     wp_enqueue_style('tailwind-css', 'https://cdn.tailwindcss.com', array(), '3.4.0');
-    
+
     // Enqueue Font Awesome
     wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css', array(), '6.4.0');
-    
+
     // Enqueue custom CSS from assets folder
     wp_enqueue_style('footer-custom-css', get_template_directory_uri() . '/assets/css/custom.css', array('tailwind-css'), '1.0.0');
-    
+
     // Enqueue custom JavaScript from assets folder
     wp_enqueue_script('footer-custom-js', get_template_directory_uri() . '/assets/js/custom.js', array('jquery'), '1.0.0', true);
-    
+
     // Localize script for AJAX
     wp_localize_script('footer-custom-js', 'footer_ajax', array(
         'ajax_url' => admin_url('admin-ajax.php'),
@@ -89,7 +90,7 @@ add_action('wp_enqueue_scripts', 'footer_theme_scripts');
 function footer_theme_favicon() {
     $favicon_url = footer_theme_image('favicon.png');
     $favicon_path = get_template_directory() . '/assets/images/favicon.png';
-    
+
     // Check if favicon file exists
     if (file_exists($favicon_path)) {
         echo '<link rel="icon" type="image/png" href="' . esc_url($favicon_url) . '">' . "\n";
@@ -103,15 +104,15 @@ add_action('wp_head', 'footer_theme_favicon');
  */
 function footer_theme_nav_class($page_slug, $active_classes = 'text-slate-800 font-bold border-b-2 border-stone-400', $default_classes = 'text-gray-600 hover:text-slate-800 transition duration-300') {
     global $post;
-    
+
     // Get current page info
     $current_slug = '';
-    
+
     if (is_front_page() || is_home()) {
         $current_slug = 'home';
     } elseif (is_page()) {
         $current_slug = $post->post_name;
-        
+
         // Check if it's a service page
         $service_pages = array('services', 'static-guard', 'mobile-patrol', 'crowd-control', 'traffic-control');
         if (in_array($current_slug, $service_pages) && $page_slug === 'services') {
@@ -120,12 +121,12 @@ function footer_theme_nav_class($page_slug, $active_classes = 'text-slate-800 fo
     } elseif (is_singular('post') || is_category() || is_tag()) {
         $current_slug = 'blog';
     }
-    
+
     // Check if current page matches the navigation item
     if ($current_slug === $page_slug) {
         return $active_classes;
     }
-    
+
     return $default_classes;
 }
 
@@ -150,17 +151,17 @@ function footer_theme_image($filename) {
 function footer_theme_logo() {
     $logo_url = footer_theme_image('logo.png');
     $logo_path = get_template_directory() . '/assets/images/logo.png';
-    
+
     // Check if custom logo is set in customizer
     if (function_exists('get_custom_logo') && has_custom_logo()) {
         return get_custom_logo();
     }
-    
+
     // Check if our theme logo file exists
     if (file_exists($logo_path)) {
         return '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr(get_bloginfo('name')) . '">';
     }
-    
+
     // Fallback to site title
     return '<h1 class="text-2xl font-bold text-slate-800">' . get_bloginfo('name') . '</h1>';
 }
@@ -171,20 +172,20 @@ function footer_theme_logo() {
 function footer_theme_footer_logo() {
     $footer_logo_url = footer_theme_image('logo-footer.png');
     $footer_logo_path = get_template_directory() . '/assets/images/logo-footer.png';
-    
+
     // Check if footer logo file exists
     if (file_exists($footer_logo_path)) {
         return '<img src="' . esc_url($footer_logo_url) . '" alt="' . esc_attr(get_bloginfo('name')) . '" class="h-36">';
     }
-    
+
     // Fallback to regular logo
     $regular_logo_url = footer_theme_image('logo.png');
     $regular_logo_path = get_template_directory() . '/assets/images/logo.png';
-    
+
     if (file_exists($regular_logo_path)) {
         return '<img src="' . esc_url($regular_logo_url) . '" alt="' . esc_attr(get_bloginfo('name')) . '" class="h-12 mb-4">';
     }
-    
+
     // Final fallback to site title
     return '<h2 class="text-2xl font-bold text-white mb-4">' . get_bloginfo('name') . '</h2>';
 }
@@ -233,7 +234,7 @@ function footer_theme_widgets_init() {
         'before_title'  => '<h3 class="widget-title">',
         'after_title'   => '</h3>',
     ));
-    
+
     register_sidebar(array(
         'name'          => __('Sidebar', 'footer-theme'),
         'id'            => 'sidebar-1',
@@ -268,7 +269,7 @@ function footer_theme_custom_post_types() {
         'supports' => array('title', 'editor', 'thumbnail', 'custom-fields'),
         'show_in_rest' => true,
     ));
-    
+
     // Team Members Post Type
     register_post_type('team', array(
         'labels' => array(
@@ -346,13 +347,14 @@ function footer_theme_handle_contact_form() {
         $name = sanitize_text_field($_POST['name']);
         $email = sanitize_email($_POST['email']);
         $message = sanitize_textarea_field($_POST['message']);
-        
+
         // Send email
         $to = get_option('admin_email');
         $subject = 'Contact Form Submission from ' . $name;
         $body = "Name: $name\nEmail: $email\nMessage: $message";
-        
-        if (footer_send_secure_email($to, $subject, $body, $email, $name)) {
+        $headers = array('Content-Type: text/html; charset=UTF-8');
+
+        if (wp_mail($to, $subject, $body, $headers)) {
             wp_redirect(add_query_arg('contact', 'success', wp_get_referer()));
         } else {
             wp_redirect(add_query_arg('contact', 'error', wp_get_referer()));
@@ -377,7 +379,7 @@ function footer_theme_create_default_categories() {
         'Crowd Control' => 'crowd-control',
         'Traffic Control' => 'traffic-control'
     );
-    
+
     foreach ($categories as $name => $slug) {
         if (!term_exists($name, 'category')) {
             wp_insert_term($name, 'category', array('slug' => $slug));
@@ -420,7 +422,7 @@ function footer_theme_customize_register($wp_customize) {
         'title' => __('Company Information', 'footer-theme'),
         'priority' => 30,
     ));
-    
+
     // Phone Number
     $wp_customize->add_setting('company_phone', array(
         'default' => '(123) 456-7890',
@@ -431,7 +433,7 @@ function footer_theme_customize_register($wp_customize) {
         'section' => 'company_info',
         'type' => 'text',
     ));
-    
+
     // Email Address
     $wp_customize->add_setting('company_email', array(
         'default' => 'info@company.com',
@@ -442,7 +444,7 @@ function footer_theme_customize_register($wp_customize) {
         'section' => 'company_info',
         'type' => 'email',
     ));
-    
+
     // Address
     $wp_customize->add_setting('company_address', array(
         'default' => '123 Main St, City, State 12345',
@@ -452,6 +454,18 @@ function footer_theme_customize_register($wp_customize) {
         'label' => __('Address', 'footer-theme'),
         'section' => 'company_info',
         'type' => 'textarea',
+    ));
+
+    // Custom Form Submission Email
+    $wp_customize->add_setting('form_submission_email', array(
+        'default' => '',
+        'sanitize_callback' => 'sanitize_email',
+    ));
+    $wp_customize->add_control('form_submission_email', array(
+        'label' => __('Form Submission Email', 'footer-theme'),
+        'description' => __('Enter the email address where all form submissions will be sent. Leave blank to use the default WordPress admin email.', 'footer-theme'),
+        'section' => 'company_info',
+        'type' => 'email',
     ));
 }
 add_action('customize_register', 'footer_theme_customize_register');
@@ -497,4 +511,3 @@ function footer_send_secure_email($to, $subject, $message, $from_email = null, $
     // Send the email
     return wp_mail($to, $subject, $message, $headers);
 }
-?>
