@@ -203,7 +203,7 @@ get_header();
         </div>
     </section>
 
-    <section class="py-20 bg-gray-100">
+<!--     <section class="py-20 bg-gray-100">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-12">
                 <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Find Our Office</h2>
@@ -259,7 +259,7 @@ get_header();
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <section class="py-20 bg-white">
         <div class="max-w-4xl mx-auto px-4">

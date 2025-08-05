@@ -77,7 +77,7 @@ get_header();
     </section>
 
     <!-- Team Section -->
-    <section class="py-20 bg-gray-100">
+   <!--  <section class="py-20 bg-gray-100">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Our Leadership Team</h2>
@@ -130,7 +130,7 @@ get_header();
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <!-- Values Section -->
     <section class="py-20 bg-white">

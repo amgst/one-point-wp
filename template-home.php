@@ -20,7 +20,7 @@ get_header();
                         With years of experience and a commitment to excellence, our professional security team delivers 24/7 protection using the latest technology and proven strategies. Trust us to safeguard what matters most to you.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="contact.html" class="bg-stone-500 hover:bg-stone-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
+                        <a href="contact" class="bg-stone-500 hover:bg-stone-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
                             Get a Quote
                         </a>
                         <a href="tel:<?php echo esc_attr(str_replace(['(', ')', ' ', '-'], '', get_theme_mod('company_phone', '(123) 456-7890'))); ?>" class="border-2 border-white hover:bg-white hover:text-slate-800 text-white font-bold py-3 px-8 rounded-lg transition duration-300 flex items-center justify-center">
@@ -50,14 +50,14 @@ get_header();
                         if ($first_name && $last_name && $job_address && $email && $phone && $service && $job_description) {
                             $to = get_theme_mod('form_submission_email', get_option('admin_email'));
                             $subject = 'New Quote Request - ' . get_bloginfo('name');
-                            $email_message = "New quote request:\n\n";
-                            $email_message .= "Name: $first_name $last_name\n";
-                            $email_message .= "Email: $email\n";
-                            $email_message .= "Phone: $phone\n";
-                            $email_message .= "Company: $company\n";
-                            $email_message .= "Job Address: $job_address\n";
-                            $email_message .= "Service: $service\n";
-                            $email_message .= "Job Description: $job_description\n";
+                            $email_message = '<h2 style="font-size: 24px; font-weight: bold; color: #1e293b; margin-bottom: 20px;">New Quote Request</h2>';
+                            $email_message .= '<p><strong>Name:</strong> ' . esc_html($first_name) . ' ' . esc_html($last_name) . '</p>';
+                            $email_message .= '<p><strong>Email:</strong> ' . esc_html($email) . '</p>';
+                            $email_message .= '<p><strong>Phone:</strong> ' . esc_html($phone) . '</p>';
+                            $email_message .= '<p><strong>Company:</strong> ' . esc_html($company) . '</p>';
+                            $email_message .= '<p><strong>Job Address:</strong> ' . esc_html($job_address) . '</p>';
+                            $email_message .= '<p><strong>Service:</strong> ' . esc_html($service) . '</p>';
+                            $email_message .= '<p><strong> Description:</strong><br>' . nl2br(esc_html($job_description)) . '</p>';
                             
                             if (footer_send_secure_email($to, $subject, $email_message, $email, $first_name . ' ' . $last_name)) {
                                 $quote_success = true;
@@ -295,25 +295,12 @@ get_header();
             <p class="text-lg mb-8">
                 Contact us today for a free, no-obligation consultation and quote.
             </p>
-            <a href="contact.html" class="bg-stone-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-stone-600 transition duration-300">
+            <a href="contact" class="bg-stone-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-stone-600 transition duration-300">
                 Contact Us
             </a>
         </div>
     </section>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('quote_form_submit')) {
-            const status = urlParams.get('quote_form_submit');
-            if (status === 'success') {
-                console.log('Form submission status: Success! Email sent successfully.');
-            } else if (status === 'error') {
-                console.error('Form submission status: Error! There was a problem sending the email.');
-            }
-        }
-    });
-</script>
 <?php
 get_footer();
 ?>
