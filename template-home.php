@@ -5,12 +5,10 @@ Template Name: Home
 get_header();
 ?>
 
-    <!-- Hero Section -->
     <section id="home" class="relative pt-20 text-white bg-cover bg-center" style="background-image: url('<?php echo footer_theme_asset('images/home.jpg'); ?>');">
         <div class="absolute inset-0 bg-black opacity-60"></div>
         <div class="relative max-w-7xl mx-auto px-4 py-20">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <!-- Left Side: Content -->
                 <div>
                     <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">
                         RELIABLE SECURITY SOLUTIONS FOR YOUR PEACE OF MIND
@@ -31,7 +29,6 @@ get_header();
                     </div>
                 </div>
 
-                <!-- Right Side: Quote Form -->
                 <div class="bg-white p-8 rounded-lg shadow-lg text-gray-800">
                     <h2 class="text-2xl font-bold mb-6 text-center text-slate-800">Get Your Security Quote Now</h2>
                     
@@ -51,7 +48,7 @@ get_header();
                         $job_description = sanitize_textarea_field($_POST['job-description']);
                         
                         if ($first_name && $last_name && $job_address && $email && $phone && $service && $job_description) {
-                            $to = get_option('admin_email');
+                            $to = get_theme_mod('form_submission_email', get_option('admin_email'));
                             $subject = 'New Quote Request - ' . get_bloginfo('name');
                             $email_message = "New quote request:\n\n";
                             $email_message .= "Name: $first_name $last_name\n";
@@ -62,9 +59,7 @@ get_header();
                             $email_message .= "Service: $service\n";
                             $email_message .= "Job Description: $job_description\n";
                             
-                            $headers = array('Content-Type: text/html; charset=UTF-8', 'From: ' . $email);
-                            
-                            if (wp_mail($to, $subject, $email_message, $headers)) {
+                            if (footer_send_secure_email($to, $subject, $email_message, $email, $first_name . ' ' . $last_name)) {
                                 $quote_success = true;
                             } else {
                                 $quote_error = 'Sorry, there was an error sending your quote request. Please try again.';
@@ -142,7 +137,6 @@ get_header();
         </div>
     </section>
 
-    <!-- Services Section -->
     <section id="services" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-16">
@@ -152,7 +146,6 @@ get_header();
                 </p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Static Guard -->
                 <div class="bg-gray-50 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                     <div class="text-slate-800 text-4xl mb-4">
                         <i class="fas fa-user-shield"></i>
@@ -163,7 +156,6 @@ get_header();
                     </p>
                     <a href="services.html#static-guard" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More <i class="fas fa-arrow-right ml-1"></i></a>
                 </div>
-                <!-- Mobile Patrol -->
                 <div class="bg-gray-50 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                     <div class="text-slate-800 text-4xl mb-4">
                         <i class="fas fa-car-side"></i>
@@ -174,7 +166,6 @@ get_header();
                     </p>
                     <a href="services.html#mobile-patrol" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More <i class="fas fa-arrow-right ml-1"></i></a>
                 </div>
-                <!-- Crowd Control -->
                 <div class="bg-gray-50 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                     <div class="text-slate-800 text-4xl mb-4">
                         <i class="fas fa-users"></i>
@@ -185,7 +176,6 @@ get_header();
                     </p>
                     <a href="services.html#crowd-control" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More <i class="fas fa-arrow-right ml-1"></i></a>
                 </div>
-                <!-- Traffic Control -->
                 <div class="bg-gray-50 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                     <div class="text-slate-800 text-4xl mb-4">
                         <i class="fas fa-traffic-light"></i>
@@ -200,7 +190,6 @@ get_header();
         </div>
     </section>
 
-    <!-- About Section -->
     <section id="about" class="py-20 bg-gray-100">
         <div class="max-w-7xl mx-auto px-4">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -223,7 +212,6 @@ get_header();
         </div>
     </section>
 
-    <!-- Why Choose Us Section -->
     <section id="why-choose-us" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-16">
@@ -264,7 +252,6 @@ get_header();
         </div>
     </section>
 
-    <!-- FAQ Section -->
     <section class="py-20 bg-gray-50">
         <div class="max-w-4xl mx-auto px-4">
             <div class="text-center mb-12">
@@ -302,7 +289,6 @@ get_header();
         </div>
     </section>
 
-    <!-- CTA Section -->
     <section class="bg-slate-800 text-white">
         <div class="max-w-7xl mx-auto px-4 py-16 text-center">
             <h2 class="text-3xl font-bold mb-4">Ready to Secure Your Premises?</h2>
@@ -315,6 +301,19 @@ get_header();
         </div>
     </section>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('quote_form_submit')) {
+            const status = urlParams.get('quote_form_submit');
+            if (status === 'success') {
+                console.log('Form submission status: Success! Email sent successfully.');
+            } else if (status === 'error') {
+                console.error('Form submission status: Error! There was a problem sending the email.');
+            }
+        }
+    });
+</script>
 <?php
 get_footer();
 ?>

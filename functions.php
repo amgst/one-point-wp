@@ -349,12 +349,11 @@ function footer_theme_handle_contact_form() {
         $message = sanitize_textarea_field($_POST['message']);
 
         // Send email
-        $to = get_option('admin_email');
+        $to = get_theme_mod('form_submission_email', get_option('admin_email'));
         $subject = 'Contact Form Submission from ' . $name;
         $body = "Name: $name\nEmail: $email\nMessage: $message";
-        $headers = array('Content-Type: text/html; charset=UTF-8');
 
-        if (wp_mail($to, $subject, $body, $headers)) {
+        if (footer_send_secure_email($to, $subject, $body, $email, $name)) {
             wp_redirect(add_query_arg('contact', 'success', wp_get_referer()));
         } else {
             wp_redirect(add_query_arg('contact', 'error', wp_get_referer()));
@@ -511,3 +510,4 @@ function footer_send_secure_email($to, $subject, $message, $from_email = null, $
     // Send the email
     return wp_mail($to, $subject, $message, $headers);
 }
+?>
