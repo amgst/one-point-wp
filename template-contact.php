@@ -41,13 +41,13 @@ get_header();
                         if ($first_name && $last_name && $email && $phone && $service && $message) {
                             $to = get_theme_mod('form_submission_email', get_option('admin_email'));
                             $subject = 'New Contact Form Submission - ' . get_bloginfo('name');
-                            $email_message = "New contact form submission:\n\n";
-                            $email_message .= "Name: $first_name $last_name\n";
-                            $email_message .= "Email: $email\n";
-                            $email_message .= "Phone: $phone\n";
-                            $email_message .= "Company: $company\n";
-                            $email_message .= "Service: $service\n";
-                            $email_message .= "Message: $message\n";
+                            $email_message = '<h2 style="font-size: 24px; font-weight: bold; color: #1e293b; margin-bottom: 20px;">New Contact Form Submission</h2>';
+                            $email_message .= '<p><strong>Name:</strong> ' . esc_html($first_name) . ' ' . esc_html($last_name) . '</p>';
+                            $email_message .= '<p><strong>Email:</strong> ' . esc_html($email) . '</p>';
+                            $email_message .= '<p><strong>Phone:</strong> ' . esc_html($phone) . '</p>';
+                            $email_message .= '<p><strong>Company:</strong> ' . esc_html($company) . '</p>';
+                            $email_message .= '<p><strong>Service:</strong> ' . esc_html($service) . '</p>';
+                            $email_message .= '<p><strong>Message:</strong><br>' . nl2br(esc_html($message)) . '</p>';
 
                             if (footer_send_secure_email($to, $subject, $email_message, $email, $first_name . ' ' . $last_name)) {
                                 $form_success = true;
@@ -209,12 +209,12 @@ get_header();
                 <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Find Our Office</h2>
                 <p class="text-gray-600 text-lg">Visit us at our Metropolis headquarters for in-person consultations</p>
             </div>
-
+            
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
                 <div class="h-96 bg-gray-200 flex items-center justify-center relative">
                     <svg width="600" height="400" viewBox="0 0 600 400" class="w-full h-full">
                         <rect width="600" height="400" fill="#e5e7eb"/>
-
+                        
                         <g stroke="#9ca3af" stroke-width="3" fill="none">
                             <line x1="0" y1="200" x2="600" y2="200"/>
                             <line x1="300" y1="0" x2="300" y2="400"/>
@@ -223,7 +223,7 @@ get_header();
                             <line x1="0" y1="100" x2="600" y2="100"/>
                             <line x1="0" y1="300" x2="600" y2="300"/>
                         </g>
-
+                        
                         <g fill="#d1d5db">
                             <rect x="50" y="50" width="80" height="120" rx="5"/>
                             <rect x="170" y="80" width="100" height="90" rx="5"/>
@@ -232,23 +232,23 @@ get_header();
                             <rect x="80" y="220" width="120" height="80" rx="5"/>
                             <rect x="320" y="240" width="100" height="120" rx="5"/>
                         </g>
-
+                        
                         <rect x="220" y="220" width="60" height="80" fill="#1c222c" rx="5"/>
                         <rect x="225" y="225" width="50" height="70" fill="#978d86" rx="3"/>
-
+                        
                         <g transform="translate(250,200)">
                             <path d="M0,0 L-10,20 L10,20 Z" fill="#ef4444"/>
                             <circle cx="0" cy="0" r="8" fill="#ef4444"/>
                             <circle cx="0" cy="0" r="4" fill="white"/>
                         </g>
-
+                        
                         <text x="10" y="195" fill="#6b7280" font-size="12" font-weight="bold">Security Lane</text>
                         <text x="305" y="15" fill="#6b7280" font-size="12" font-weight="bold" transform="rotate(90 305 15)">Main Avenue</text>
-
+                        
                         <text x="250" y="180" text-anchor="middle" fill="#1c222c" font-size="14" font-weight="bold">The One Point Security</text>
                         <text x="250" y="195" text-anchor="middle" fill="#1c222c" font-size="12">Head Office</text>
                     </svg>
-
+                    
                     <div class="absolute bottom-4 left-4 bg-white p-4 rounded-lg shadow-lg">
                         <h4 class="font-bold text-slate-800 mb-2">The One Point Security</h4>
                         <p class="text-gray-600 text-sm"><?php echo wp_kses_post(get_theme_mod('company_address', '123 Security Lane, Suite 100<br>Metropolis, ST 12345')); ?></p>
@@ -267,44 +267,31 @@ get_header();
                 <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Frequently Asked Questions</h2>
                 <p class="text-gray-600 text-lg">Quick answers to common questions about our security services</p>
             </div>
-
+            
             <div class="space-y-6">
                 <div class="bg-gray-50 p-6 rounded-lg">
                     <h3 class="text-lg font-bold text-slate-800 mb-3">How quickly can you respond to security emergencies?</h3>
                     <p class="text-gray-600">Our emergency response team can typically arrive on-site within 15-30 minutes in metropolitan areas, depending on location and traffic conditions. We maintain 24/7 monitoring and rapid response capabilities.</p>
                 </div>
-
+                
                 <div class="bg-gray-50 p-6 rounded-lg">
                     <h3 class="text-lg font-bold text-slate-800 mb-3">Are your security guards licensed and insured?</h3>
                     <p class="text-gray-600">Yes, all our security personnel are fully licensed, bonded, and insured. They undergo comprehensive background checks, professional training, and regular certification updates to maintain the highest standards.</p>
                 </div>
-
+                
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-bold text-slate-800 mb-3">What's the difference between static guard and mobile patrol services?</h3>
+                    <p class="text-gray-600">Static guards are stationed at your property providing continuous on-site presence, access control, and immediate response. Mobile patrols provide scheduled and random property checks, covering multiple locations efficiently.</p>
+                </div>
+                
                 <div class="bg-gray-50 p-6 rounded-lg">
                     <h3 class="text-lg font-bold text-slate-800 mb-3">Do you provide security services outside of Metropolis?</h3>
                     <p class="text-gray-600">Yes, we provide security services across major cities. Contact us to discuss your specific location and requirements.</p>
-                </div>
-
-                <div class="bg-gray-50 p-6 rounded-lg">
-                    <h3 class="text-lg font-bold text-slate-800 mb-3">What is included in a security assessment?</h3>
-                    <p class="text-gray-600">Our comprehensive security assessment includes property evaluation, risk analysis, vulnerability identification, and customized security recommendations. We provide a detailed report with implementation timelines and cost estimates.</p>
                 </div>
             </div>
         </div>
     </section>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('contact')) {
-            const status = urlParams.get('contact');
-            if (status === 'success') {
-                console.log('Form submission status: Success! Email sent successfully.');
-            } else if (status === 'error') {
-                console.error('Form submission status: Error! There was a problem sending the email.');
-            }
-        }
-    });
-</script>
 <?php
 get_footer();
 ?>

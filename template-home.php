@@ -20,7 +20,7 @@ get_header();
                         With years of experience and a commitment to excellence, our professional security team delivers 24/7 protection using the latest technology and proven strategies. Trust us to safeguard what matters most to you.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="contact.html" class="bg-stone-500 hover:bg-stone-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
+                        <a href="contact" class="bg-stone-500 hover:bg-stone-600 text-white font-bold py-3 px-8 rounded-lg transition duration-300">
                             Get a Quote
                         </a>
                         <a href="tel:<?php echo esc_attr(str_replace(['(', ')', ' ', '-'], '', get_theme_mod('company_phone', '(123) 456-7890'))); ?>" class="border-2 border-white hover:bg-white hover:text-slate-800 text-white font-bold py-3 px-8 rounded-lg transition duration-300 flex items-center justify-center">
@@ -154,7 +154,7 @@ get_header();
                     <p class="text-gray-600 mb-4">
                         Dedicated, licensed security guards to protect your premises, assets, and personnel around the clock.
                     </p>
-                    <a href="services.html#static-guard" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More <i class="fas fa-arrow-right ml-1"></i></a>
+                    <a href="<?php echo home_url('/static-guard'); ?>" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More <i class="fas fa-arrow-right ml-1"></i></a>
                 </div>
                 <div class="bg-gray-50 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                     <div class="text-slate-800 text-4xl mb-4">
@@ -164,7 +164,7 @@ get_header();
                     <p class="text-gray-600 mb-4">
                         Regular, visible patrols to deter potential threats and provide rapid response to any incidents.
                     </p>
-                    <a href="services.html#mobile-patrol" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More <i class="fas fa-arrow-right ml-1"></i></a>
+                    <a href="<?php echo home_url('/mobile-patrol'); ?>" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More <i class="fas fa-arrow-right ml-1"></i></a>
                 </div>
                 <div class="bg-gray-50 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                     <div class="text-slate-800 text-4xl mb-4">
@@ -174,7 +174,7 @@ get_header();
                     <p class="text-gray-600 mb-4">
                         Expert management of crowds for events of all sizes, ensuring a safe and orderly environment.
                     </p>
-                    <a href="services.html#crowd-control" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More <i class="fas fa-arrow-right ml-1"></i></a>
+                    <a href="<?php echo home_url('/crowd-control'); ?>" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More <i class="fas fa-arrow-right ml-1"></i></a>
                 </div>
                 <div class="bg-gray-50 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                     <div class="text-slate-800 text-4xl mb-4">
@@ -184,7 +184,7 @@ get_header();
                     <p class="text-gray-600 mb-4">
                         Professional traffic management services to ensure smooth and safe flow of vehicles and pedestrians.
                     </p>
-                    <a href="services.html#traffic-control" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More <i class="fas fa-arrow-right ml-1"></i></a>
+                    <a href="<?php echo home_url('/traffic-control'); ?>" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More <i class="fas fa-arrow-right ml-1"></i></a>
                 </div>
             </div>
         </div>
@@ -201,7 +201,7 @@ get_header();
                     <p class="text-gray-600 mb-6">
                         Our team consists of highly trained, licensed, and experienced security professionals who are dedicated to ensuring the safety and security of your premises. We pride ourselves on our integrity, professionalism, and commitment to excellence.
                     </p>
-                    <a href="about.html" class="bg-slate-800 text-white font-bold py-3 px-6 rounded-lg hover:bg-slate-700 transition duration-300">
+                    <a href="about" class="bg-slate-800 text-white font-bold py-3 px-6 rounded-lg hover:bg-slate-700 transition duration-300">
                         Learn More About Us
                     </a>
                 </div>
@@ -295,7 +295,7 @@ get_header();
             <p class="text-lg mb-8">
                 Contact us today for a free, no-obligation consultation and quote.
             </p>
-            <a href="contact.html" class="bg-stone-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-stone-600 transition duration-300">
+            <a href="contact" class="bg-stone-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-stone-600 transition duration-300">
                 Contact Us
             </a>
         </div>
