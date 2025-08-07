@@ -1,0 +1,34 @@
+name: Auto Deploy to WordPress
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Deploy to WordPress site
+      run: |
+        # This will trigger the deployment script on your WordPress site
+        # Replace YOUR_SITE_URL and YOUR_SECRET_KEY with actual values
+        curl -X POST "https://your-site-url.com/wp-content/themes/footer/deploy.php?key=your-secret-key-here" \
+          -H "Content-Type: application/json" \
+          -d '{"ref": "refs/heads/main", "repository": {"name": "one-point-wp"}}'
+      env:
+        DEPLOY_SECRET: ${{ secrets.DEPLOY_SECRET }}
+        
+    - name: Notify deployment status
+      if: always()
+      run: |
+        if [ $? -eq 0 ]; then
+          echo "✅ Deployment successful"
+        else
+          echo "❌ Deployment failed"
+        fi
