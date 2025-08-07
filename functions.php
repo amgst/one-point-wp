@@ -699,19 +699,39 @@ function handle_theme_git_update() {
         }
         
         // Check if git is available
-        exec('git --version 2>&1', $output, $return_code);
-        if ($return_code !== 0) {
-            throw new Exception('Git is not available on this server');
+        $git_path = 'git'; // Default git command
+        
+        // Try different possible Git paths for Windows/Local environments
+        $possible_paths = [
+            'git',
+            'C:\\Program Files\\Git\\bin\\git.exe',
+            'C:\\Program Files (x86)\\Git\\bin\\git.exe',
+            'C:\\Git\\bin\\git.exe'
+        ];
+        
+        $git_available = false;
+        foreach ($possible_paths as $path) {
+            exec("\"$path\" --version 2>&1", $output, $return_code);
+            if ($return_code === 0) {
+                $git_path = $path;
+                $git_available = true;
+                break;
+            }
+            $output = []; // Reset output for next iteration
+        }
+        
+        if (!$git_available) {
+            throw new Exception('Git is not available on this server. Please ensure Git is installed and accessible to PHP. For Local by Flywheel users, you may need to use the manual update methods instead.');
         }
         
         // Fetch latest changes
-        exec('git fetch origin 2>&1', $fetch_output, $fetch_code);
+        exec("\"$git_path\" fetch origin 2>&1", $fetch_output, $fetch_code);
         if ($fetch_code !== 0) {
             throw new Exception('Failed to fetch from repository: ' . implode('\n', $fetch_output));
         }
         
         // Check if there are updates available
-        exec('git log HEAD..origin/main --oneline 2>&1', $log_output, $log_code);
+        exec("\"$git_path\" log HEAD..origin/main --oneline 2>&1", $log_output, $log_code);
         if (empty($log_output)) {
             wp_send_json_success(array(
                 'message' => 'Theme is already up to date. No updates available.',
@@ -721,16 +741,16 @@ function handle_theme_git_update() {
         }
         
         // Get current commit for logging
-        exec('git log -1 --oneline 2>&1', $current_commit);
+        exec("\"$git_path\" log -1 --oneline 2>&1", $current_commit);
         
         // Reset to latest commit (this will overwrite local changes)
-        exec('git reset --hard origin/main 2>&1', $reset_output, $reset_code);
+        exec("\"$git_path\" reset --hard origin/main 2>&1", $reset_output, $reset_code);
         if ($reset_code !== 0) {
             throw new Exception('Failed to update theme: ' . implode('\n', $reset_output));
         }
         
         // Get new commit info
-        exec('git log -1 --oneline 2>&1', $new_commit);
+        exec("\"$git_path\" log -1 --oneline 2>&1", $new_commit);
         
         // Log the update
         $log_entry = date('Y-m-d H:i:s') . " - Theme updated successfully\n";
@@ -779,19 +799,39 @@ function get_theme_update_status() {
         }
         
         // Check if git is available
-        exec('git --version 2>&1', $output, $return_code);
-        if ($return_code !== 0) {
-            return array('error' => 'Git is not available');
+        $git_path = 'git'; // Default git command
+        
+        // Try different possible Git paths for Windows/Local environments
+        $possible_paths = [
+            'git',
+            'C:\\Program Files\\Git\\bin\\git.exe',
+            'C:\\Program Files (x86)\\Git\\bin\\git.exe',
+            'C:\\Git\\bin\\git.exe'
+        ];
+        
+        $git_available = false;
+        foreach ($possible_paths as $path) {
+            exec("\"$path\" --version 2>&1", $output, $return_code);
+            if ($return_code === 0) {
+                $git_path = $path;
+                $git_available = true;
+                break;
+            }
+            $output = []; // Reset output for next iteration
+        }
+        
+        if (!$git_available) {
+            return array('error' => 'Git is not available on this server');
         }
         
         // Get current commit
-        exec('git log -1 --oneline 2>&1', $current_commit);
+        exec("\"$git_path\" log -1 --oneline 2>&1", $current_commit);
         
         // Fetch latest changes (silently)
-        exec('git fetch origin 2>&1', $fetch_output, $fetch_code);
+        exec("\"$git_path\" fetch origin 2>&1", $fetch_output, $fetch_code);
         
         // Check for available updates
-        exec('git log HEAD..origin/main --oneline 2>&1', $log_output, $log_code);
+        exec("\"$git_path\" log HEAD..origin/main --oneline 2>&1", $log_output, $log_code);
         
         $status = array(
             'current_commit' => isset($current_commit[0]) ? $current_commit[0] : 'Unknown',
