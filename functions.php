@@ -553,7 +553,15 @@ function footer_theme_update_customize_register($wp_customize) {
                             
                             $('#theme-update-status').addClass('info').html(statusHtml).show();
                         } else {
-                            $('#theme-update-status').addClass('error').html('✗ ' + response.data.message).show();
+                            var errorMsg = response.data.message;
+                            var helpText = '';
+                            
+                            if (errorMsg.includes('Git is not available') || errorMsg.includes('Not a Git repository')) {
+                                helpText = '<br><small style="color: #666;">Git updates are not available in this environment. Use FTP/SFTP for manual updates.</small>';
+                                $('#theme-update-btn').hide();
+                            }
+                            
+                            $('#theme-update-status').addClass('error').html('✗ ' + errorMsg + helpText).show();
                         }
                     }
                 });
@@ -604,7 +612,15 @@ function footer_theme_update_customize_register($wp_customize) {
                                 wp.customize.previewer.refresh();
                             }, 3000);
                         } else {
-                            status.removeClass('info success').addClass('error').html('✗ ' + (response.data.message || 'Update failed')).show();
+                            var errorMsg = response.data.message || 'Update failed';
+                            var helpText = '';
+                            
+                            if (errorMsg.includes('Git is not available') || errorMsg.includes('Not a Git repository')) {
+                                helpText = '<br><small style="color: #666;">Git updates are not available in this environment. Use FTP/SFTP for manual updates.</small>';
+                                $('#theme-update-btn').hide();
+                            }
+                            
+                            status.removeClass('info success').addClass('error').html('✗ ' + errorMsg + helpText).show();
                         }
                     },
                     error: function() {
@@ -721,7 +737,13 @@ function handle_theme_git_update() {
         }
         
         if (!$git_available) {
-            throw new Exception('Git is not available on this server. Please ensure Git is installed and accessible to PHP. For Local by Flywheel users, you may need to use the manual update methods instead.');
+            throw new Exception('Git is not available on this server. This theme appears to be deployed in a non-Git environment. Please use FTP/SFTP to manually update theme files, or contact your hosting provider to enable Git support.');
+        }
+        
+        // Check if current directory is a Git repository
+        exec("\"$git_path\" rev-parse --git-dir 2>&1", $git_check_output, $git_check_code);
+        if ($git_check_code !== 0) {
+            throw new Exception('This theme directory is not a Git repository. The Git update feature only works when the theme is deployed via Git. Please use manual file upload methods to update your theme.');
         }
         
         // Fetch latest changes
@@ -822,6 +844,12 @@ function get_theme_update_status() {
         
         if (!$git_available) {
             return array('error' => 'Git is not available on this server');
+        }
+        
+        // Check if current directory is a Git repository
+        exec("\"$git_path\" rev-parse --git-dir 2>&1", $git_check_output, $git_check_code);
+        if ($git_check_code !== 0) {
+            return array('error' => 'Not a Git repository');
         }
         
         // Get current commit
