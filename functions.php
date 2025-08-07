@@ -470,6 +470,385 @@ function footer_theme_customize_register($wp_customize) {
 add_action('customize_register', 'footer_theme_customize_register');
 
 /**
+ * Theme Update Customizer Registration
+ */
+function footer_theme_update_customize_register($wp_customize) {
+    /**
+     * Custom Update Button Control Class
+     */
+    class WP_Customize_Update_Button_Control extends WP_Customize_Control {
+    public $type = 'update_button';
+    
+    public function render_content() {
+        ?>
+        <label>
+            <span class="customize-control-title"><?php echo esc_html($this->label); ?></span>
+            <?php if (!empty($this->description)) : ?>
+                <span class="description customize-control-description"><?php echo $this->description; ?></span>
+            <?php endif; ?>
+            <div class="theme-update-controls">
+                <button type="button" class="button button-primary" id="theme-update-btn">
+                    <?php _e('Update Theme Now', 'footer-theme'); ?>
+                </button>
+                <span class="spinner" id="theme-update-spinner"></span>
+                <div id="theme-update-status" class="update-status"></div>
+            </div>
+        </label>
+        <style>
+            .theme-update-controls {
+                margin-top: 10px;
+            }
+            .theme-update-controls .spinner {
+                float: none;
+                margin: 0 10px;
+            }
+            .update-status {
+                margin-top: 10px;
+                padding: 10px;
+                border-radius: 3px;
+                display: none;
+            }
+            .update-status.success {
+                background: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+                display: block;
+            }
+            .update-status.error {
+                background: #f8d7da;
+                color: #721c24;
+                border: 1px solid #f5c6cb;
+                display: block;
+            }
+            .update-status.info {
+                background: #d1ecf1;
+                color: #0c5460;
+                border: 1px solid #bee5eb;
+                display: block;
+            }
+        </style>
+        <script>
+        jQuery(document).ready(function($) {
+            // Check for updates on page load
+            function checkForUpdates() {
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'check_theme_updates',
+                        nonce: '<?php echo wp_create_nonce("theme_update_nonce"); ?>'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            var data = response.data;
+                            var statusHtml = '<strong>Current:</strong> ' + data.current_commit + '<br>';
+                            
+                            if (data.updates_available) {
+                                statusHtml += '<span style="color: #f56e28;">⚠ ' + data.update_count + ' update(s) available</span>';
+                                $('#theme-update-btn').prop('disabled', false);
+                            } else {
+                                statusHtml += '<span style="color: #46b450;">✓ Theme is up to date</span>';
+                                $('#theme-update-btn').prop('disabled', true);
+                            }
+                            
+                            $('#theme-update-status').addClass('info').html(statusHtml).show();
+                        } else {
+                            $('#theme-update-status').addClass('error').html('✗ ' + response.data.message).show();
+                        }
+                    }
+                });
+            }
+            
+            // Load update log
+            function loadUpdateLog() {
+                var log = '<?php echo esc_js(get_theme_update_log()); ?>';
+                if (log) {
+                    $('#theme-update-log').val(log);
+                }
+            }
+            
+            // Initialize
+            checkForUpdates();
+            loadUpdateLog();
+            
+            // Update button click handler
+            $('#theme-update-btn').on('click', function() {
+                var button = $(this);
+                var spinner = $('#theme-update-spinner');
+                var status = $('#theme-update-status');
+                
+                button.prop('disabled', true);
+                spinner.addClass('is-active');
+                status.removeClass('success error info').addClass('info').html('Updating theme...').show();
+                
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'theme_git_update',
+                        nonce: '<?php echo wp_create_nonce("theme_update_nonce"); ?>'
+                    },
+                    success: function(response) {
+                        spinner.removeClass('is-active');
+                        button.prop('disabled', false);
+                        
+                        if (response.success) {
+                            status.removeClass('info error').addClass('success').html('✓ ' + response.data.message).show();
+                            if (response.data.log) {
+                                $('#theme-update-log').val(response.data.log);
+                            }
+                            // Refresh status after successful update
+                            setTimeout(checkForUpdates, 2000);
+                            // Refresh the customizer after successful update
+                            setTimeout(function() {
+                                wp.customize.previewer.refresh();
+                            }, 3000);
+                        } else {
+                            status.removeClass('info success').addClass('error').html('✗ ' + (response.data.message || 'Update failed')).show();
+                        }
+                    },
+                    error: function() {
+                        spinner.removeClass('is-active');
+                        button.prop('disabled', false);
+                        status.removeClass('info success').addClass('error').html('✗ Network error occurred').show();
+                    }
+                });
+            });
+            
+            // Add refresh button functionality
+            $('<button type="button" class="button" style="margin-left: 10px;">Check for Updates</button>')
+                .insertAfter('#theme-update-btn')
+                .click(function(e) {
+                    e.preventDefault();
+                    checkForUpdates();
+                    loadUpdateLog();
+                });
+        });
+        </script>
+        <?php
+    }
+}
+
+    // Add Theme Update Section
+    $wp_customize->add_section('theme_update', array(
+        'title' => __('Theme Updates', 'footer-theme'),
+        'description' => __('Manage theme updates from Git repository', 'footer-theme'),
+        'priority' => 30,
+    ));
+    
+    // Add Update Status Setting
+    $wp_customize->add_setting('theme_update_status', array(
+        'default' => '',
+        'sanitize_callback' => 'sanitize_text_field',
+        'transport' => 'postMessage',
+    ));
+    
+    // Add Update Button Control
+    $wp_customize->add_control(new WP_Customize_Update_Button_Control(
+        $wp_customize,
+        'theme_update_button',
+        array(
+            'label' => __('Update Theme', 'footer-theme'),
+            'description' => __('Click to update the theme from the Git repository. This will overwrite any local changes.', 'footer-theme'),
+            'section' => 'theme_update',
+            'settings' => 'theme_update_status',
+        )
+    ));
+    
+    // Add Update Log Setting
+    $wp_customize->add_setting('theme_update_log', array(
+        'default' => '',
+        'sanitize_callback' => 'wp_kses_post',
+        'transport' => 'postMessage',
+    ));
+    
+    // Add Update Log Control
+    $wp_customize->add_control('theme_update_log', array(
+        'label' => __('Update Log', 'footer-theme'),
+        'section' => 'theme_update',
+        'type' => 'textarea',
+        'input_attrs' => array(
+            'readonly' => 'readonly',
+            'rows' => 10,
+            'id' => 'theme-update-log',
+        ),
+    ));
+}
+add_action('customize_register', 'footer_theme_update_customize_register');
+
+/**
+ * AJAX Handler for Theme Git Update
+ */
+function handle_theme_git_update() {
+    // Verify nonce for security
+    if (!wp_verify_nonce($_POST['nonce'], 'theme_update_nonce')) {
+        wp_die('Security check failed');
+    }
+    
+    // Check user permissions
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(array('message' => 'Insufficient permissions'));
+    }
+    
+    try {
+        $theme_dir = get_template_directory();
+        
+        // Change to theme directory
+        if (!chdir($theme_dir)) {
+            throw new Exception('Could not change to theme directory');
+        }
+        
+        // Check if git is available
+        exec('git --version 2>&1', $output, $return_code);
+        if ($return_code !== 0) {
+            throw new Exception('Git is not available on this server');
+        }
+        
+        // Fetch latest changes
+        exec('git fetch origin 2>&1', $fetch_output, $fetch_code);
+        if ($fetch_code !== 0) {
+            throw new Exception('Failed to fetch from repository: ' . implode('\n', $fetch_output));
+        }
+        
+        // Check if there are updates available
+        exec('git log HEAD..origin/main --oneline 2>&1', $log_output, $log_code);
+        if (empty($log_output)) {
+            wp_send_json_success(array(
+                'message' => 'Theme is already up to date. No updates available.',
+                'log' => 'No new commits found.'
+            ));
+            return;
+        }
+        
+        // Get current commit for logging
+        exec('git log -1 --oneline 2>&1', $current_commit);
+        
+        // Reset to latest commit (this will overwrite local changes)
+        exec('git reset --hard origin/main 2>&1', $reset_output, $reset_code);
+        if ($reset_code !== 0) {
+            throw new Exception('Failed to update theme: ' . implode('\n', $reset_output));
+        }
+        
+        // Get new commit info
+        exec('git log -1 --oneline 2>&1', $new_commit);
+        
+        // Log the update
+        $log_entry = date('Y-m-d H:i:s') . " - Theme updated successfully\n";
+        $log_entry .= "From: " . (isset($current_commit[0]) ? $current_commit[0] : 'Unknown') . "\n";
+        $log_entry .= "To: " . (isset($new_commit[0]) ? $new_commit[0] : 'Unknown') . "\n";
+        $log_entry .= "Changes applied: " . count($log_output) . " commits\n\n";
+        
+        // Save log to file
+        $log_file = $theme_dir . '/theme-update.log';
+        file_put_contents($log_file, $log_entry, FILE_APPEND | LOCK_EX);
+        
+        // Clear any WordPress caches
+        if (function_exists('wp_cache_flush')) {
+            wp_cache_flush();
+        }
+        
+        wp_send_json_success(array(
+            'message' => 'Theme updated successfully! Applied ' . count($log_output) . ' new commits.',
+            'log' => $log_entry,
+            'commits' => $log_output
+        ));
+        
+    } catch (Exception $e) {
+        // Log the error
+        $error_log = date('Y-m-d H:i:s') . " - Update failed: " . $e->getMessage() . "\n";
+        $log_file = get_template_directory() . '/theme-update.log';
+        file_put_contents($log_file, $error_log, FILE_APPEND | LOCK_EX);
+        
+        wp_send_json_error(array(
+            'message' => 'Update failed: ' . $e->getMessage()
+        ));
+    }
+}
+add_action('wp_ajax_theme_git_update', 'handle_theme_git_update');
+
+/**
+ * Get Theme Update Status
+ */
+function get_theme_update_status() {
+    try {
+        $theme_dir = get_template_directory();
+        
+        // Change to theme directory
+        if (!chdir($theme_dir)) {
+            return array('error' => 'Could not access theme directory');
+        }
+        
+        // Check if git is available
+        exec('git --version 2>&1', $output, $return_code);
+        if ($return_code !== 0) {
+            return array('error' => 'Git is not available');
+        }
+        
+        // Get current commit
+        exec('git log -1 --oneline 2>&1', $current_commit);
+        
+        // Fetch latest changes (silently)
+        exec('git fetch origin 2>&1', $fetch_output, $fetch_code);
+        
+        // Check for available updates
+        exec('git log HEAD..origin/main --oneline 2>&1', $log_output, $log_code);
+        
+        $status = array(
+            'current_commit' => isset($current_commit[0]) ? $current_commit[0] : 'Unknown',
+            'updates_available' => !empty($log_output),
+            'update_count' => count($log_output),
+            'pending_commits' => $log_output
+        );
+        
+        return $status;
+        
+    } catch (Exception $e) {
+        return array('error' => $e->getMessage());
+    }
+}
+
+/**
+ * AJAX Handler for Checking Updates
+ */
+function handle_check_theme_updates() {
+    // Verify nonce for security
+    if (!wp_verify_nonce($_POST['nonce'], 'theme_update_nonce')) {
+        wp_die('Security check failed');
+    }
+    
+    // Check user permissions
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(array('message' => 'Insufficient permissions'));
+    }
+    
+    $status = get_theme_update_status();
+    
+    if (isset($status['error'])) {
+        wp_send_json_error(array('message' => $status['error']));
+    } else {
+        wp_send_json_success($status);
+    }
+}
+add_action('wp_ajax_check_theme_updates', 'handle_check_theme_updates');
+
+/**
+ * Get Theme Update Log
+ */
+function get_theme_update_log() {
+    $log_file = get_template_directory() . '/theme-update.log';
+    
+    if (file_exists($log_file)) {
+        $log_content = file_get_contents($log_file);
+        // Return last 20 lines for display
+        $lines = explode("\n", $log_content);
+        $recent_lines = array_slice($lines, -20);
+        return implode("\n", $recent_lines);
+    }
+    
+    return 'No update log available yet.';
+}
+
+/**
  * Admin Customizations
  */
 function footer_theme_admin_styles() {
