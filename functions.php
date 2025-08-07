@@ -476,7 +476,99 @@ function footer_theme_update_customize_register($wp_customize) {
     /**
      * Custom Update Button Control Class
      */
-    class WP_Customize_Update_Button_Control extends WP_Customize_Control {
+    class WP_Customize_Git_Init_Control extends WP_Customize_Control {
+    public $type = 'git_init_button';
+    
+    public function render_content() {
+        ?>
+        <label>
+            <span class="customize-control-title"><?php echo esc_html($this->label); ?></span>
+            <?php if (!empty($this->description)) : ?>
+                <span class="description customize-control-description"><?php echo $this->description; ?></span>
+            <?php endif; ?>
+        </label>
+        
+        <div id="git-init-controls">
+            <button type="button" id="git-init-btn" class="button button-primary" style="margin-top: 10px;">
+                <?php _e('Initialize Git Repository', 'footer-theme'); ?>
+            </button>
+            <span id="git-init-spinner" class="spinner" style="float: none; margin-left: 10px;"></span>
+        </div>
+        
+        <div id="git-init-status" style="margin-top: 10px; padding: 10px; border-radius: 3px; display: none;"></div>
+        
+        <style>
+        #git-init-status.success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        #git-init-status.error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        #git-init-status.info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        </style>
+        
+        <script>
+        jQuery(document).ready(function($) {
+            $('#git-init-btn').on('click', function() {
+                var button = $(this);
+                var spinner = $('#git-init-spinner');
+                var status = $('#git-init-status');
+                var repoUrl = $('input[data-customize-setting-link="theme_git_repo_url"]').val();
+                
+                if (!repoUrl) {
+                    status.removeClass('success info').addClass('error').html('✗ Please enter a Git repository URL first.').show();
+                    return;
+                }
+                
+                button.prop('disabled', true);
+                spinner.addClass('is-active');
+                status.removeClass('success error info').addClass('info').html('Initializing Git repository...').show();
+                
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'init_git_repo',
+                        repo_url: repoUrl,
+                        nonce: '<?php echo wp_create_nonce("theme_update_nonce"); ?>'
+                    },
+                    success: function(response) {
+                        spinner.removeClass('is-active');
+                        button.prop('disabled', false);
+                        
+                        if (response.success) {
+                            status.removeClass('info error').addClass('success').html('✓ ' + response.data.message).show();
+                            // Refresh the page after successful initialization
+                            setTimeout(function() {
+                                wp.customize.previewer.refresh();
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            status.removeClass('info success').addClass('error').html('✗ ' + response.data.message).show();
+                        }
+                    },
+                    error: function() {
+                        spinner.removeClass('is-active');
+                        button.prop('disabled', false);
+                        status.removeClass('info success').addClass('error').html('✗ Network error occurred').show();
+                    }
+                });
+            });
+        });
+        </script>
+        <?php
+    }
+}
+
+class WP_Customize_Update_Button_Control extends WP_Customize_Control {
     public $type = 'update_button';
     
     public function render_content() {
@@ -557,7 +649,7 @@ function footer_theme_update_customize_register($wp_customize) {
                             var helpText = '';
                             
                             if (errorMsg.includes('Git is not available') || errorMsg.includes('Not a Git repository')) {
-                                helpText = '<br><small style="color: #666;">Git updates are not available in this environment. Use FTP/SFTP for manual updates.</small>';
+                                helpText = '<br><small style="color: #666;">Git updates are not available. Enter your Git repository URL above and click "Initialize Git Repository" to enable Git updates, or use FTP/SFTP for manual updates.</small>';
                                 $('#theme-update-btn').hide();
                             }
                             
@@ -616,9 +708,9 @@ function footer_theme_update_customize_register($wp_customize) {
                             var helpText = '';
                             
                             if (errorMsg.includes('Git is not available') || errorMsg.includes('Not a Git repository')) {
-                                helpText = '<br><small style="color: #666;">Git updates are not available in this environment. Use FTP/SFTP for manual updates.</small>';
-                                $('#theme-update-btn').hide();
-                            }
+                                 helpText = '<br><small style="color: #666;">Git updates are not available. Enter your Git repository URL above and click "Initialize Git Repository" to enable Git updates, or use FTP/SFTP for manual updates.</small>';
+                                 $('#theme-update-btn').hide();
+                             }
                             
                             status.removeClass('info success').addClass('error').html('✗ ' + errorMsg + helpText).show();
                         }
@@ -651,6 +743,42 @@ function footer_theme_update_customize_register($wp_customize) {
         'description' => __('Manage theme updates from Git repository', 'footer-theme'),
         'priority' => 30,
     ));
+    
+    // Add Git Repository URL Setting
+    $wp_customize->add_setting('theme_git_repo_url', array(
+        'default' => '',
+        'sanitize_callback' => 'esc_url_raw',
+        'transport' => 'refresh',
+    ));
+    
+    // Add Git Repository URL Control
+     $wp_customize->add_control('theme_git_repo_url', array(
+         'label' => __('Git Repository URL', 'footer-theme'),
+         'description' => __('Enter your Git repository URL (e.g., https://github.com/username/repo.git) to enable Git updates on this server.', 'footer-theme'),
+         'section' => 'theme_update',
+         'type' => 'url',
+         'priority' => 5,
+     ));
+     
+     // Add Git Initialize Button Setting
+     $wp_customize->add_setting('theme_git_init', array(
+         'default' => '',
+         'sanitize_callback' => 'sanitize_text_field',
+         'transport' => 'postMessage',
+     ));
+     
+     // Add Git Initialize Button Control
+     $wp_customize->add_control(new WP_Customize_Git_Init_Control(
+         $wp_customize,
+         'theme_git_init_button',
+         array(
+             'label' => __('Initialize Git Repository', 'footer-theme'),
+             'description' => __('Click to initialize Git repository with the URL above. This enables Git updates on servers without Git deployment.', 'footer-theme'),
+             'section' => 'theme_update',
+             'settings' => 'theme_git_init',
+             'priority' => 6,
+         )
+     ));
     
     // Add Update Status Setting
     $wp_customize->add_setting('theme_update_status', array(
@@ -807,6 +935,115 @@ function handle_theme_git_update() {
     }
 }
 add_action('wp_ajax_theme_git_update', 'handle_theme_git_update');
+add_action('wp_ajax_check_theme_updates', 'get_theme_update_status');
+add_action('wp_ajax_init_git_repo', 'handle_init_git_repo');
+
+/**
+ * Handle Git repository initialization
+ */
+function handle_init_git_repo() {
+    // Verify nonce
+    if (!wp_verify_nonce($_POST['nonce'], 'theme_update_nonce')) {
+        wp_send_json_error(array('message' => 'Security check failed'));
+        return;
+    }
+    
+    // Check user permissions
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(array('message' => 'Insufficient permissions'));
+        return;
+    }
+    
+    $repo_url = sanitize_text_field($_POST['repo_url']);
+    if (empty($repo_url)) {
+        wp_send_json_error(array('message' => 'Repository URL is required'));
+        return;
+    }
+    
+    try {
+        // Change to theme directory
+        $theme_dir = get_template_directory();
+        if (!chdir($theme_dir)) {
+            throw new Exception('Failed to change to theme directory');
+        }
+        
+        // Check if git is available
+        $git_path = 'git'; // Default git command
+        
+        // Try different possible Git paths for Windows/Local environments
+        $possible_paths = [
+            'git',
+            'C:\\Program Files\\Git\\bin\\git.exe',
+            'C:\\Program Files (x86)\\Git\\bin\\git.exe',
+            'C:\\Git\\bin\\git.exe'
+        ];
+        
+        $git_available = false;
+        foreach ($possible_paths as $path) {
+            exec("\"$path\" --version 2>&1", $output, $return_code);
+            if ($return_code === 0) {
+                $git_path = $path;
+                $git_available = true;
+                break;
+            }
+            $output = []; // Reset output for next iteration
+        }
+        
+        if (!$git_available) {
+            throw new Exception('Git is not available on this server. Please install Git first.');
+        }
+        
+        // Check if already a git repository
+        exec("\"$git_path\" rev-parse --git-dir 2>&1", $git_check_output, $git_check_code);
+        if ($git_check_code === 0) {
+            // Already a git repo, just add the remote
+            exec("\"$git_path\" remote remove origin 2>&1", $remove_output, $remove_code);
+            exec("\"$git_path\" remote add origin \"$repo_url\" 2>&1", $remote_output, $remote_code);
+            if ($remote_code !== 0) {
+                throw new Exception('Failed to add remote origin: ' . implode('\n', $remote_output));
+            }
+        } else {
+            // Initialize new git repository
+            exec("\"$git_path\" init 2>&1", $init_output, $init_code);
+            if ($init_code !== 0) {
+                throw new Exception('Failed to initialize Git repository: ' . implode('\n', $init_output));
+            }
+            
+            // Add remote origin
+            exec("\"$git_path\" remote add origin \"$repo_url\" 2>&1", $remote_output, $remote_code);
+            if ($remote_code !== 0) {
+                throw new Exception('Failed to add remote origin: ' . implode('\n', $remote_output));
+            }
+            
+            // Add all files
+            exec("\"$git_path\" add . 2>&1", $add_output, $add_code);
+            if ($add_code !== 0) {
+                throw new Exception('Failed to add files: ' . implode('\n', $add_output));
+            }
+            
+            // Initial commit
+            exec("\"$git_path\" commit -m \"Initial commit from live server\" 2>&1", $commit_output, $commit_code);
+            // Don't fail if commit fails (might be nothing to commit)
+        }
+        
+        // Fetch from remote
+        exec("\"$git_path\" fetch origin 2>&1", $fetch_output, $fetch_code);
+        if ($fetch_code !== 0) {
+            throw new Exception('Failed to fetch from repository. Please check the URL and ensure it\'s accessible: ' . implode('\n', $fetch_output));
+        }
+        
+        // Save the repository URL to WordPress options
+        update_option('theme_git_repo_url', $repo_url);
+        
+        wp_send_json_success(array(
+            'message' => 'Git repository initialized successfully! You can now use Git updates.',
+            'log' => 'Repository URL: ' . $repo_url . "\n" . 'Git repository initialized and connected.'
+        ));
+        
+    } catch (Exception $e) {
+        wp_send_json_error(array('message' => $e->getMessage()));
+    }
+}
 
 /**
  * Get Theme Update Status
