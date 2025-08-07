@@ -176,23 +176,15 @@ get_header();
 
                     <div class="bg-white p-8 rounded-lg shadow-lg">
                         <h3 class="text-2xl font-bold text-slate-800 mb-6">Service Areas</h3>
-                        <div class="grid grid-cols-2 gap-4 text-gray-600">
+                        <div class="text-gray-600">
                             <div>
-                                <h4 class="font-bold text-gray-900 mb-2">New South Wales</h4>
+                                <h4 class="font-bold text-gray-900 mb-2">Victoria</h4>
                                 <ul class="space-y-1 text-sm">
-                                    <li>• Sydney CBD</li>
-                                    <li>• North Shore</li>
-                                    <li>• Western Sydney</li>
-                                    <li>• South Sydney</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-900 mb-2">Other States</h4>
-                                <ul class="space-y-1 text-sm">
-                                    <li>• Melbourne, VIC</li>
-                                    <li>• Brisbane, QLD</li>
-                                    <li>• Perth, WA</li>
-                                    <li>• Adelaide, SA</li>
+                                    <li>• Melbourne CBD</li>
+                                    <li>• Metro Areas</li>
+                                    <li>• Non-metro Areas</li>
+                                    <li>• Geelong</li>
+                                    <li>• Melton</li>
                                 </ul>
                             </div>
                         </div>
@@ -245,12 +237,12 @@ get_header();
                         <text x="10" y="195" fill="#6b7280" font-size="12" font-weight="bold">Security Lane</text>
                         <text x="305" y="15" fill="#6b7280" font-size="12" font-weight="bold" transform="rotate(90 305 15)">Main Avenue</text>
                         
-                        <text x="250" y="180" text-anchor="middle" fill="#1c222c" font-size="14" font-weight="bold">The One Point Security</text>
+                        <text x="250" y="180" text-anchor="middle" fill="#1c222c" font-size="14" font-weight="bold">The On Point Security</text>
                         <text x="250" y="195" text-anchor="middle" fill="#1c222c" font-size="12">Head Office</text>
                     </svg>
                     
                     <div class="absolute bottom-4 left-4 bg-white p-4 rounded-lg shadow-lg">
-                        <h4 class="font-bold text-slate-800 mb-2">The One Point Security</h4>
+                        <h4 class="font-bold text-slate-800 mb-2">The On Point Security</h4>
                         <p class="text-gray-600 text-sm"><?php echo wp_kses_post(get_theme_mod('company_address', '123 Security Lane, Suite 100<br>Metropolis, ST 12345')); ?></p>
                         <a href="#" class="text-slate-600 hover:text-slate-800 text-sm underline mt-2 inline-block">
                             Get Directions

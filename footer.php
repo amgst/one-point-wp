@@ -14,14 +14,8 @@
                         <a href="#" class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-stone-600 transition duration-300" aria-label="Facebook">
                             <i class="fab fa-facebook-f text-sm"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-stone-600 transition duration-300" aria-label="Twitter">
-                            <i class="fab fa-twitter text-sm"></i>
-                        </a>
                         <a href="#" class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-stone-600 transition duration-300" aria-label="LinkedIn">
                             <i class="fab fa-linkedin-in text-sm"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-stone-600 transition duration-300" aria-label="Instagram">
-                            <i class="fab fa-instagram text-sm"></i>
                         </a>
                     </div>
                 </div>

@@ -172,7 +172,7 @@ get_header();
         <div class="max-w-7xl mx-auto px-4 py-16 text-center">
             <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Secure Your Assets?</h2>
             <p class="text-lg text-slate-300 mb-8 max-w-2xl mx-auto">
-                Let The One Point Security provide you with the peace of mind you deserve. Our professional team is ready to tailor a security solution that fits your unique needs.
+                Let The On Point Security provide you with the peace of mind you deserve. Our professional team is ready to tailor a security solution that fits your unique needs.
             </p>
             <a href="<?php echo home_url('/contact'); ?>" class="bg-stone-500 hover:bg-stone-600 text-slate-800 font-bold py-4 px-10 rounded-lg transition duration-300 text-lg">
                 Get a Free Quote Today
