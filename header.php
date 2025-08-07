@@ -3,6 +3,30 @@
 <head>
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php
+    // Add meta description
+    $meta_description = '';
+    if (is_home() || is_front_page()) {
+        $meta_description = 'Professional security services in Melbourne CBD, Metro Areas, Geelong, and Melton. Static guards, mobile patrol, crowd control, and traffic management by The On Point Security.';
+    } elseif (is_page('about')) {
+        $meta_description = 'Learn about The On Point Security - Founded in 2019, providing uncompromising security services across Victoria with experienced professionals.';
+    } elseif (is_page('services')) {
+        $meta_description = 'Comprehensive security services including static guards, mobile patrol, crowd control, and traffic management across Melbourne and Victoria.';
+    } elseif (is_page('contact')) {
+        $meta_description = 'Contact The On Point Security for professional security services in Melbourne CBD, Metro Areas, Geelong, and Melton. 24/7 emergency response available.';
+    } elseif (is_page('static-guard')) {
+        $meta_description = 'Professional static guard services providing 24/7 on-site security presence, access control, and immediate incident response across Victoria.';
+    } elseif (is_page('mobile-patrol')) {
+        $meta_description = 'Mobile patrol security services offering flexible, cost-effective protection with regular vehicle patrols and rapid response across multiple locations.';
+    } elseif (is_page('crowd-control')) {
+        $meta_description = 'Professional crowd control services for events, venues, and public gatherings with certified security personnel ensuring safety and order.';
+    } elseif (is_page('traffic-control')) {
+        $meta_description = 'Certified traffic control services for construction sites, events, and road work projects ensuring safe vehicle and pedestrian flow.';
+    }
+    if ($meta_description) {
+        echo '<meta name="description" content="' . esc_attr($meta_description) . '">' . "\n    ";
+    }
+    ?>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <?php wp_head(); ?>

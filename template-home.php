@@ -154,7 +154,7 @@ get_header();
                     <p class="text-gray-600 mb-4">
                         Dedicated, licensed security guards to protect your premises, assets, and personnel around the clock.
                     </p>
-                    <a href="<?php echo home_url('/static-guard'); ?>" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More <i class="fas fa-arrow-right ml-1"></i></a>
+                    <a href="<?php echo home_url('/static-guard'); ?>" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More About Static Guard Services <i class="fas fa-arrow-right ml-1"></i></a>
                 </div>
                 <div class="bg-gray-50 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                     <div class="text-slate-800 text-4xl mb-4">
@@ -164,7 +164,7 @@ get_header();
                     <p class="text-gray-600 mb-4">
                         Regular, visible patrols to deter potential threats and provide rapid response to any incidents.
                     </p>
-                    <a href="<?php echo home_url('/mobile-patrol'); ?>" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More <i class="fas fa-arrow-right ml-1"></i></a>
+                    <a href="<?php echo home_url('/mobile-patrol'); ?>" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More About Mobile Patrol Services <i class="fas fa-arrow-right ml-1"></i></a>
                 </div>
                 <div class="bg-gray-50 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                     <div class="text-slate-800 text-4xl mb-4">
@@ -174,7 +174,7 @@ get_header();
                     <p class="text-gray-600 mb-4">
                         Expert management of crowds for events of all sizes, ensuring a safe and orderly environment.
                     </p>
-                    <a href="<?php echo home_url('/crowd-control'); ?>" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More <i class="fas fa-arrow-right ml-1"></i></a>
+                    <a href="<?php echo home_url('/crowd-control'); ?>" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More About Crowd Control Services <i class="fas fa-arrow-right ml-1"></i></a>
                 </div>
                 <div class="bg-gray-50 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                     <div class="text-slate-800 text-4xl mb-4">
@@ -184,7 +184,7 @@ get_header();
                     <p class="text-gray-600 mb-4">
                         Professional traffic management services to ensure smooth and safe flow of vehicles and pedestrians.
                     </p>
-                    <a href="<?php echo home_url('/traffic-control'); ?>" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More <i class="fas fa-arrow-right ml-1"></i></a>
+                    <a href="<?php echo home_url('/traffic-control'); ?>" class="text-stone-600 font-semibold hover:text-slate-800 transition-colors duration-300">Learn More About Traffic Control Services <i class="fas fa-arrow-right ml-1"></i></a>
                 </div>
             </div>
         </div>
