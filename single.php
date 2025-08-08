@@ -171,13 +171,7 @@ get_header();
         ?>
 
         <!-- Comments Section -->
-        <?php if (comments_open() || get_comments_number()) : ?>
-            <section class="py-20 bg-white">
-                <div class="max-w-4xl mx-auto px-4">
-                    <?php comments_template(); ?>
-                </div>
-            </section>
-        <?php endif; ?>
+
 
     <?php endwhile; ?>
 <?php else : ?>
